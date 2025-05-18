@@ -20,7 +20,9 @@ class SevenScenes(BaseManyViewDataset):
                  min_thresh=10, max_thresh=100, 
                  test_id=None, full_video=False, 
                  tuple_path=None, seq_id=None,
-                 kf_every=1, *args, ROOT, **kwargs):
+                 kf_every=1, train_ratio=0.5, 
+                 mode='train', val_ratio=0.2,
+                 *args, ROOT, **kwargs):
         
         self.ROOT = ROOT
         super().__init__(*args, **kwargs)
@@ -32,6 +34,10 @@ class SevenScenes(BaseManyViewDataset):
         self.full_video = full_video
         self.kf_every = kf_every
         self.seq_id = seq_id
+        self.train_ratio = train_ratio
+        self.mode = mode              # train / val
+        self.val_ratio = val_ratio    # the proportion of the training data used for validation
+
 
          # load all scenes
         self.load_all_tuples(tuple_path)
@@ -70,23 +76,33 @@ class SevenScenes(BaseManyViewDataset):
         
         self.scene_list = []
         for scene in scenes:
+            
+            scene_path = osp.join(base_dir, scene) # e.g., 7scenes/redkitchen
+            if not osp.isdir(scene_path):
+                continue
+
             if self.test_id is not None and scene != self.test_id:
                 continue
+            
+            split_file_path = osp.join(scene_path, file_split) # e.g., 7scenes/redkitchen/TrainSplit.txt
+            if not osp.isfile(split_file_path):
+                continue  
+            
             # read file split
-            with open(osp.join(base_dir, scene, file_split)) as f:
+            with open(split_file_path) as f:
                 seq_ids = f.read().splitlines()
-                
-                
+                             
                 for seq_id in seq_ids:
                     # seq is string, take the int part and make it 01, 02, 03
                     # seq_id = 'seq-{:2d}'.format(int(seq_id))
-                    num_part = ''.join(filter(str.isdigit, seq_id))
+                    num_part = ''.join(filter(str.isdigit, seq_id)) 
                     seq_id = f'seq-{num_part.zfill(2)}'
                     if self.seq_id is not None and seq_id != self.seq_id:
                         continue
-                    self.scene_list.append(f"{scene}/{seq_id}")
-        
-        
+                    
+                    # scene/train/seq-XX 或 scene/test/seq-XX
+                    self.scene_list.append(f"{scene}/{self.split}/{seq_id}") # e.g., redkitchen/train/seq-01
+              
         print(f"Found {len(self.scene_list)} sequences in split {self.split}")
     
 
@@ -99,12 +115,20 @@ class SevenScenes(BaseManyViewDataset):
             img_idxs = line[1:]
         
         else:
-            scene_id = self.scene_list[idx // self.num_seq]
-            seq_id = idx % self.num_seq
+            scene_id = self.scene_list[idx // self.num_seq] # e.g., redkitchen/train/seq-01
 
-            data_path = osp.join(self.ROOT, scene_id)
-            num_files = len([name for name in os.listdir(data_path) if 'color' in name])
-            img_idxs = [f'{i:06d}' for i in range(num_files)]
+            data_path = osp.join(self.ROOT, scene_id) # e.g., 7scenes/redkitchen/train/seq-01
+            
+            all_img_files = sorted([name for name in os.listdir(data_path) if 'color' in name]) # e.g., frame-000000.color.png
+            img_idxs = [f.split('-')[-1].split('.')[0] for f in all_img_files] # e.g., 000000
+            # split the training data into train and val subsets based on val_ratio
+            if self.mode in ['train', 'val']:
+                split_point = int(len(img_idxs) * (1 - self.val_ratio))
+                if self.mode == 'train':
+                    img_idxs = img_idxs[:split_point]
+                else:
+                    img_idxs = img_idxs[split_point:]
+            # sample frames
             img_idxs = self.sample_frame_idx(img_idxs, rng, full_video=self.full_video)
         
         # Intrinsics used in SimpleRecon
@@ -122,6 +146,13 @@ class SevenScenes(BaseManyViewDataset):
             depthpath = osp.join(self.ROOT, scene_id, f'frame-{im_idx}.depth.proj.png')
             posepath = osp.join(self.ROOT, scene_id, f'frame-{im_idx}.pose.txt')
 
+            # skip pose.txt during the test phase (pose information must not be used during testing)
+            if self.split != 'test':
+                camera_pose = np.loadtxt(posepath).astype(np.float32)
+            else:
+                # camera_pose = None
+                camera_pose = np.eye(4, dtype=np.float32) ### ?
+
             rgb_image = imread_cv2(impath)
             depthmap = imread_cv2(depthpath, cv2.IMREAD_UNCHANGED)
             rgb_image = cv2.resize(rgb_image, (depthmap.shape[1], depthmap.shape[0]))
@@ -130,9 +161,6 @@ class SevenScenes(BaseManyViewDataset):
             depthmap = np.nan_to_num(depthmap.astype(np.float32), 0.0) / 1000.0
             depthmap[depthmap>10] = 0
             depthmap[depthmap<1e-3] = 0
-
-            
-            camera_pose = np.loadtxt(posepath).astype(np.float32)
 
             rgb_image, depthmap, intrinsics = self._crop_resize_if_necessary(
                 rgb_image, depthmap, intrinsics_, resolution, rng=rng, info=impath)
@@ -155,6 +183,3 @@ class SevenScenes(BaseManyViewDataset):
 
 
                     
-
-
-

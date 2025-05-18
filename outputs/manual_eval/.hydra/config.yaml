@@ -1,0 +1,150 @@
+task_name: ablation_recon_better_inference_hp_${task_name_model_name}
+tags:
+- eval
+- ablation_recon_better_inference_hp
+ckpt_path: /home/tony/tony/fast3r/logs/super_long_training/runs/super_long_training_99999/checkpoints/last.ckpt
+data:
+  data_root: /path/to/dust3r_data
+  num_views: 0
+  num_views_val: 10
+  data_module:
+    _target_: fast3r.data.multiview_dust3r_datamodule.MultiViewDUSt3RDataModule
+    train_datasets: []
+    validation_datasets:
+    - SevenScenes(split='test', ROOT='${data.data_root}/7_scenes_processed', resolution=512,
+      num_seq=1, full_video=True, kf_every=20)
+    batch_size_per_device: 6
+    batch_size_per_device_val: 1
+    num_workers: 6
+    pin_memory: true
+    num_workers_val: 1
+model:
+  _target_: fast3r.models.multiview_dust3r_module.MultiViewDUSt3RLitModule
+  pretrained: /path/to/checkpoints/DUSt3R_ViTLarge_BaseDecoder_512_dpt.pth
+  resume_from_checkpoint: ${ckpt_path}
+  eval_use_pts3d_from_local_head: true
+  train_criterion:
+    _target_: fast3r.dust3r.losses.ConfLossMultiviewV2
+    pixel_loss:
+      _target_: fast3r.dust3r.losses.Regr3DMultiviewV4
+      criterion:
+        _target_: fast3r.dust3r.losses.L21Loss
+      norm_mode: avg_dis
+    alpha: 0.2
+  validation_criterion:
+    _target_: fast3r.dust3r.losses.ConfLossMultiviewV2
+    pixel_loss:
+      _target_: fast3r.dust3r.losses.Regr3DMultiviewV4
+      criterion:
+        _target_: fast3r.dust3r.losses.L21Loss
+      norm_mode: avg_dis
+    alpha: 0.2
+  optimizer:
+    _target_: torch.optim.AdamW
+    _partial_: true
+    lr: 0.0001
+    betas:
+    - 0.9
+    - 0.95
+    weight_decay: 0.05
+  scheduler:
+    _target_: pl_bolts.optimizers.lr_scheduler.LinearWarmupCosineAnnealingLR
+    _partial_: true
+    warmup_epochs: 10
+    max_epochs: ${trainer.max_epochs}
+    eta_min: 1.0e-06
+  net:
+    _target_: fast3r.models.fast3r.Fast3R
+    encoder_args:
+      encoder_type: croco
+      img_size: 512
+      patch_size: 16
+      patch_embed_cls: ManyAR_PatchEmbed
+      embed_dim: 1024
+      num_heads: 16
+      depth: 24
+      mlp_ratio: 4
+      pos_embed: RoPE100
+      attn_implementation: flash_attention
+    decoder_args:
+      decoder_type: fast3r
+      random_image_idx_embedding: true
+      enc_embed_dim: ${model.net.encoder_args.embed_dim}
+      embed_dim: 768
+      num_heads: 12
+      depth: 12
+      mlp_ratio: 4.0
+      qkv_bias: true
+      drop: 0.0
+      attn_drop: 0.0
+      attn_implementation: flash_attention
+    head_args:
+      head_type: dpt
+      output_mode: pts3d
+      landscape_only: true
+      depth_mode:
+      - exp
+      - -.inf
+      - .inf
+      conf_mode:
+      - exp
+      - 1
+      - .inf
+      patch_size: 16
+    freeze: none
+  compile: false
+logger:
+  csv:
+    _target_: lightning.pytorch.loggers.csv_logs.CSVLogger
+    save_dir: ${paths.output_dir}
+    name: csv/
+    prefix: ''
+  wandb:
+    _target_: lightning.pytorch.loggers.wandb.WandbLogger
+    name: ${task_name}_${slurm_job_id}
+    save_dir: ${paths.output_dir}
+    offline: false
+    id: null
+    anonymous: null
+    project: fast3r
+    log_model: false
+    prefix: ''
+    group: ''
+    tags: []
+    job_type: ''
+trainer:
+  _target_: lightning.pytorch.trainer.Trainer
+  _convert_: partial
+  default_root_dir: ${paths.output_dir}
+  min_epochs: 1
+  max_epochs: 100
+  accelerator: gpu
+  devices: auto
+  check_val_every_n_epoch: 1
+  deterministic: false
+  plugins: null
+  strategy:
+    _target_: lightning.pytorch.strategies.DDPStrategy
+    timeout:
+      _target_: datetime.timedelta
+      minutes: 30
+  num_nodes: 1
+  sync_batchnorm: true
+  use_distributed_sampler: false
+  log_every_n_steps: 1
+  limit_train_batches: 0
+  limit_val_batches: 10000
+paths:
+  root_dir: ${oc.env:PROJECT_ROOT}
+  data_dir: ${paths.root_dir}/data/
+  log_dir: ${paths.root_dir}/logs/
+  output_dir: ${hydra:runtime.output_dir}
+  work_dir: ${hydra:runtime.cwd}
+  run_folder_name: ${task_name}_${slurm_job_id}
+extras:
+  ignore_warnings: false
+  enforce_tags: true
+  print_config: true
+seed: 42
+task_name_model_name: super_long_training
+slurm_job_id: ???

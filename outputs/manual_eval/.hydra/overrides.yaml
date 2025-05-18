@@ -1,0 +1,3 @@
+- eval=ablation_recon_better_inference_hp/ablation_recon_better_inference_hp
+- ckpt_path=/home/tony/tony/fast3r/logs/super_long_training/runs/super_long_training_99999/checkpoints/last.ckpt
+- trainer.plugins=null
