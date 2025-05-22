@@ -131,6 +131,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Ignore big output files
-PLY/test.zip
-PLY/test/*.ply
+# big files
+7SCENES/
+PLY/
+GT/
+checkpoints/

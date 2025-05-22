@@ -12,7 +12,7 @@ cd cv_final_project
 ```bash
 conda create -n dust3r python=3.11 cmake=3.14.0
 conda activate dust3r 
-conda install pytorch torchvision pytorch-cuda=12.1 -c pytorch -c nvidia  # use the correct version of cuda for your system
+conda install pytorch torchvision pytorch-cuda=11.8 -c pytorch -c nvidia  # use the correct version of cuda for your system
 pip install -r requirements.txt
 # Optional: you can also install additional packages to:
 # - add support for HEIC images
@@ -48,7 +48,7 @@ You can check the hyperparameters we used to train these models in the [section:
 To download a specific model, for example `DUSt3R_ViTLarge_BaseDecoder_512_dpt.pth`:
 ```bash
 mkdir -p checkpoints/
-wget https://download.europe.naverlabs.com/ComputerVision/DUSt3R/DUSt3R_ViTLarge_BaseDecoder_512_dpt.pth -P checkpoints/
+wget https://download.europe.naverlabs.com/ComputerVision/DUSt3R/DUSt3R_ViTLarge_BaseDecoder_224_linear.pth -P checkpoints/
 ```
 
 For the checkpoints, make sure to agree to the license of all the public training datasets and base checkpoints we used, in addition to CC-BY-NC-SA 4.0. Again, see [section: Our Hyperparameters](#our-hyperparameters) for details.
@@ -62,20 +62,21 @@ For the checkpoints, make sure to agree to the license of all the public trainin
     
     + Automatically extracts image pairs, corresponding depth maps, and camera poses from the 7Scenes dataset, and formats them into the input structure required for training the DUSt3R model.
 
-- `/home/tony/dust3r/dust3r/datasets/__init__.py`
+- `dust3r/datasets/__init__.py`
 
     + add "from .sevenscenes import SevenScenes  # noqa"
 
 ### Training & testing
 
-- `/home/tony/dust3r/train_dust3r.sh`
+- `train_dust3r.sh`
 
     + Command to execute fine-tuning
     + You can execute it using the following command: `bash train_dust3r.sh`
 
 ### inference
 
-- `/home/tony/dust3r/infer_dust3r.py`
+- `infer_dust3r.py`
 
     + Reads test image sequences from the 7Scenes dataset, uses a fine-tuned Dust3r model to infer dense 3D point clouds from image pairs, and saves the world-aligned point clouds as .ply files.
+    + You can execute it using the following command: `run infer_dust3r.py`
 
