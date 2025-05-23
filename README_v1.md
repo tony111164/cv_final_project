@@ -78,5 +78,5 @@ For the checkpoints, make sure to agree to the license of all the public trainin
 - `infer_dust3r.py`
 
     + Reads test image sequences from the 7Scenes dataset, uses a fine-tuned Dust3r model to infer dense 3D point clouds from image pairs, and saves the world-aligned point clouds as .ply files.
-    + You can execute it using the following command: `run infer_dust3r.py`
+    + You can execute it using the following command: `python infer_dust3r.py`
 
