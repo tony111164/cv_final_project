@@ -92,7 +92,14 @@ class SevenScenes(BaseStereoViewDataset):
             # else:
             #     camera_pose = np.eye(4, dtype=np.float32)
             
-            camera_pose = np.eye(4, dtype=np.float32)
+            if self.split.lower() == 'train':
+                if osp.exists(pose_path):
+                    camera_pose = np.loadtxt(pose_path, dtype=np.float32)
+                else:
+                    camera_pose = np.eye(4, dtype=np.float32)
+            else:
+                # For 'test', skip using the pose
+                camera_pose = np.eye(4, dtype=np.float32)
             
             intrinsics = np.array([
                 [585, 0, 320],
