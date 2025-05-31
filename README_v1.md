@@ -80,3 +80,9 @@ For the checkpoints, make sure to agree to the license of all the public trainin
     + Reads test image sequences from the 7Scenes dataset, uses a fine-tuned Dust3r model to infer dense 3D point clouds from image pairs, and saves the world-aligned point clouds as .ply files.
     + You can execute it using the following command: `python infer_dust3r.py`
 
+### visualize
+
+- `ply_visualize.py`
+
+    + Execute it to visualize PLY files in the test folder
+    + First go to the PLY folder with `cd PLY`, then you can run it using the command: `python3 ply_visualize.py test/{PLY_file}`
