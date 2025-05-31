@@ -105,7 +105,7 @@ for seq_dir in tqdm(scene_dirs, desc="Processing Sequences"):
     print(f"[{scene}-{seq}] Original point count: {len(pcd.points)}")
 
     # Downsample
-    voxel_size = 7.5e-3
+    voxel_size = 8e-3
     pcd_down = pcd.voxel_down_sample(voxel_size=voxel_size)
     print(f"[{scene}-{seq}] Downsampled point count: {len(pcd_down.points)}")
 
