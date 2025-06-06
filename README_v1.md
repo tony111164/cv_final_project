@@ -19,13 +19,14 @@ conda install pytorch torchvision pytorch-cuda=11.8 -c pytorch -c nvidia  # use 
 pip install -r requirements.txt
 ```
 ## Usage Flow
-    1. Run training script
-    ```bash
-    bash train_dust3r.sh
-    ```
-    2. Run inference
-    ```bash
-    python infer_dust3r.py
+1. Run training script
+```bash
+bash train_dust3r.sh
+```
+2. Run inference
+```bash
+python infer_dust3r.py
+```
 
 ## Implementation Details
 #### Download Pretrained Checkpoints
