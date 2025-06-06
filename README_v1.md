@@ -41,7 +41,7 @@ To download a specific model, for example `DUSt3R_ViTLarge_BaseDecoder_512_dpt.p
 mkdir -p checkpoints/
 wget https://download.europe.naverlabs.com/ComputerVision/DUSt3R/DUSt3R_ViTLarge_BaseDecoder_224_linear.pth -P checkpoints/
 ```
-    ``
+
 #### Data Preprocessing
 - `dust3r/datasets/sevenscenes.py`
     
