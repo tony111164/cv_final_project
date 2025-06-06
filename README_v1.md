@@ -28,7 +28,7 @@ pip install -r requirements.txt
     python infer_dust3r.py
 
 ## Implementation Details
-### Download Pretrained Checkpoints
+#### Download Pretrained Checkpoints
 - Three DUSt3R pretrained models:
 | Modelname   | Training resolutions | Head | Encoder | Decoder |
 |-------------|----------------------|------|---------|---------|
@@ -42,7 +42,7 @@ mkdir -p checkpoints/
 wget https://download.europe.naverlabs.com/ComputerVision/DUSt3R/DUSt3R_ViTLarge_BaseDecoder_224_linear.pth -P checkpoints/
 ```
     ``
-### Data Preprocessing
+#### Data Preprocessing
 - `dust3r/datasets/sevenscenes.py`
     
     + Extracts image pairs, depth maps, and camera poses from the 7Scenes dataset.
@@ -52,7 +52,7 @@ wget https://download.europe.naverlabs.com/ComputerVision/DUSt3R/DUSt3R_ViTLarge
 
     + Added `from .sevenscenes import SevenScenes` to register the dataset class.
 
-### Training & Testing
+#### Training & Testing
 - `train_dust3r.sh`
 
     + Bash script to run fine-tuning with 7Scenes.
@@ -61,7 +61,7 @@ wget https://download.europe.naverlabs.com/ComputerVision/DUSt3R/DUSt3R_ViTLarge
     bash train_dust3r.sh
     ```
 
-### Inference
+#### Inference
 - `infer_dust3r.py`
 
     + Loads a fine-tuned model to infer dense 3D point clouds from RGB image pairs.
@@ -71,7 +71,7 @@ wget https://download.europe.naverlabs.com/ComputerVision/DUSt3R/DUSt3R_ViTLarge
     python infer_dust3r.py
     ```
     
-### Visualize
+#### Visualize
 - `ply_visualize.py`
 
     + Visualizes `.ply` files generated during inference using Open3D.
