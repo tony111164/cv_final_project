@@ -134,5 +134,5 @@ dmypy.json
 # big files
 7SCENES/
 PLY/
-checkpoints/dust3r_7scenes/
-checkpoints/pretrained_model/
+checkpoints/
+checkpoints/

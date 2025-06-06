@@ -21,5 +21,5 @@ torchrun --nproc_per_node=1 train.py \
     --pretrained="checkpoints/pretrained_model/DUSt3R_ViTLarge_BaseDecoder_224_linear.pth" \
     --lr=0.0001 --min_lr=1e-06 --warmup_epochs=2 --epochs=10 --batch_size=1 --accum_iter=2 \
     --save_freq=10 --keep_freq=10 --eval_freq=1 --print_freq=10 \
-    --output_dir="checkpoints/dust3r_7scenes/train_8000" \
+    --output_dir="checkpoints/finetuned/train_8000" \
     --amp 1

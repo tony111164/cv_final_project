@@ -24,12 +24,13 @@ pip install -r requirements.txt
 ```bash
 bash train_dust3r.sh
 ```
+
 2. Run Dense Inference
 ```bash
 python infer_dust3r.py \
   --scenes_root <7SCENES_dir> \
   --output_dir PLY/seq_output \
-  --model_ckpt checkpoints/dust3r_7scenes/codabench/checkpoint-best.pth \
+  --model_ckpt checkpoints/finetuned/codabench/checkpoint-best.pth \
   --step 20 \
   --voxel_size 7.5e-3 \
   --seq_pattern seq-*
@@ -39,7 +40,7 @@ python infer_dust3r.py \
 python infer_dust3r.py \
   --scenes_root <7SCENES_dir> \
   --output_dir PLY/sparse_seq_output \
-  --model_ckpt checkpoints/dust3r_7scenes/codabench/checkpoint-best.pth \
+  --model_ckpt checkpoints/finetuned/codabench/checkpoint-best.pth \
   --step 1 \
   --voxel_size 7.5e-3 \
   --seq_pattern sparse-seq-*
