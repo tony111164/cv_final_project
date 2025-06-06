@@ -29,7 +29,7 @@ bash train_dust3r.sh
 python infer_dust3r.py \
   --scenes_root <7SCENES_dir> \
   --output_dir PLY/seq_output \
-  --model_ckpt checkpoints/dust3r_7scenes/train_3000/checkpoint-best.pth \
+  --model_ckpt checkpoints/dust3r_7scenes/codabench/checkpoint-best.pth \
   --step 20 \
   --voxel_size 7.5e-3 \
   --seq_pattern seq-*
@@ -39,7 +39,7 @@ python infer_dust3r.py \
 python infer_dust3r.py \
   --scenes_root <7SCENES_dir> \
   --output_dir PLY/sparse_seq_output \
-  --model_ckpt checkpoints/dust3r_7scenes/train_3000/checkpoint-best.pth \
+  --model_ckpt checkpoints/dust3r_7scenes/codabench/checkpoint-best.pth \
   --step 1 \
   --voxel_size 7.5e-3 \
   --seq_pattern sparse-seq-*
@@ -48,9 +48,23 @@ python infer_dust3r.py \
 ## Inference Results
 - Dense seq:
 
-| Scene           | Accuracy  | Completeness |
-|----------------|-----------|--------------|
-| **AVERAGE**    | **0.25** | **0.62** |
+| scene             | accuracy  | completeness |
+|------------------|-----------|--------------|
+| chess-seq-03     | 0.122886  | 0.170037     |
+| fire-seq-03      | 0.112968  | 0.254270     |
+| heads-seq-01     | 0.666334  | 0.745163     |
+| office-seq-02    | 0.205867  | 0.797964     |
+| office-seq-06    | 0.257353  | 2.439485     |
+| office-seq-07    | 0.342966  | 0.732847     |
+| office-seq-09    | 0.384060  | 0.866026     |
+| pumpkin-seq-01   | 0.270064  | 0.987779     |
+| redkitchen-seq-03| 0.222992  | 0.961739     |
+| redkitchen-seq-04| 0.192505  | 0.713748     |
+| redkitchen-seq-06| 0.114588  | 0.527019     |
+| redkitchen-seq-12| 0.118102  | 0.742114     |
+| redkitchen-seq-14| 0.137135  | 0.670429     |
+| stairs-seq-01    | 0.127639  | 0.808731     |
+| **average**      | **0.25**  | **0.62**      |
 
 - Sparse seq:
 
@@ -111,7 +125,7 @@ wget https://download.europe.naverlabs.com/ComputerVision/DUSt3R/DUSt3R_ViTLarge
         python infer_dust3r.py \
         --scenes_root <7SCENES_dir> \
         --output_dir PLY/seq_output \
-        --model_ckpt checkpoints/dust3r_7scenes/train_3000/checkpoint-best.pth \
+        --model_ckpt checkpoints/dust3r_7scenes/codabench/checkpoint-best.pth \
         --step 20 \
         --voxel_size 7.5e-3 \
         --seq_pattern seq-*
@@ -121,7 +135,7 @@ wget https://download.europe.naverlabs.com/ComputerVision/DUSt3R/DUSt3R_ViTLarge
         python infer_dust3r.py \
         --scenes_root <7SCENES_dir> \
         --output_dir PLY/sparse_seq_output \
-        --model_ckpt checkpoints/dust3r_7scenes/train_3000/checkpoint-best.pth \
+        --model_ckpt checkpoints/dust3r_7scenes/codabench/checkpoint-best.pth \
         --step 1 \
         --voxel_size 7.5e-3 \
         --seq_pattern sparse-seq-*
