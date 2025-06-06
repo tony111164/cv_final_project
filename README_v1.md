@@ -65,7 +65,7 @@ wget https://download.europe.naverlabs.com/ComputerVision/DUSt3R/DUSt3R_ViTLarge
 - `infer_dust3r.py`
 
     + Loads a fine-tuned model to infer dense 3D point clouds from RGB image pairs.
-    + Applies coordinate transformation and exports .ply files.
+    + Applies coordinate transformation and exports `.ply` files.
     + Run with:
     ```bash
     python infer_dust3r.py
