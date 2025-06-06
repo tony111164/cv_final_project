@@ -1,22 +1,25 @@
 # cv final project
 
+## Slides
+- [📊 Presentation Slides](https://3dreconstruction.my.canva.site/)
+
 ## Installation
 
-1. Clone DUSt3R.
+1. Clone the repository:
 ```bash
 git clone --recursive https://github.com/tony111164/cv_final_project.git
 cd cv_final_project
 ```
 
-2. Create the environment
+2. Create the conda environment and install dependencies:
 ```bash
 conda create -n dust3r python=3.11 cmake=3.14.0
 conda activate dust3r 
 conda install pytorch torchvision pytorch-cuda=11.8 -c pytorch -c nvidia  # use the correct version of cuda for your system
 pip install -r requirements.txt
 ```
-## Checkpoints
-
+## Pretrained Checkpoints
+- Three DUSt3R pretrained models:
 | Modelname   | Training resolutions | Head | Encoder | Decoder |
 |-------------|----------------------|------|---------|---------|
 | [`DUSt3R_ViTLarge_BaseDecoder_224_linear.pth`](https://download.europe.naverlabs.com/ComputerVision/DUSt3R/DUSt3R_ViTLarge_BaseDecoder_224_linear.pth) | 224x224 | Linear | ViT-L | ViT-B |
@@ -28,36 +31,49 @@ To download a specific model, for example `DUSt3R_ViTLarge_BaseDecoder_512_dpt.p
 mkdir -p checkpoints/
 wget https://download.europe.naverlabs.com/ComputerVision/DUSt3R/DUSt3R_ViTLarge_BaseDecoder_224_linear.pth -P checkpoints/
 ```
+## Usage Flow
+    1. Run training script (`bash train_dust3r.sh`)
+    2. Run inference (`python infer_dust3r.py`)
+    3. Visualize output point clouds (`python ply_visualize.py`)
 
 ## Key Modifications
 
 ### Data preprocessing
-
 - `dust3r/datasets/sevenscenes.py`
     
-    + Automatically extracts image pairs, corresponding depth maps, and camera poses from the 7Scenes dataset, and formats them into the input structure required for training the DUSt3R model.
+    + Extracts image pairs, depth maps, and camera poses from the 7Scenes dataset.
+    + Formats data into the structure required for DUSt3R fine-tuning.
 
 - `dust3r/datasets/__init__.py`
 
-    + add "from .sevenscenes import SevenScenes  # noqa"
+    + Added `from .sevenscenes import SevenScenes` to register the dataset class.
 
-### Training & testing
-
+### Training & Testing
 - `train_dust3r.sh`
 
-    + Command to execute fine-tuning
-    + You can execute it using the following command: `bash train_dust3r.sh`
+    + Bash script to run fine-tuning with 7Scenes.
+    + Run with:
+    ```bash
+    bash train_dust3r.sh
+    ```
 
-### inference
-
+### Inference
 - `infer_dust3r.py`
 
-    + Reads test image sequences from the 7Scenes dataset, uses a fine-tuned Dust3r model to infer dense 3D point clouds from image pairs, and saves the world-aligned point clouds as .ply files.
-    + You can execute it using the following command: `python infer_dust3r.py`
-
-### visualize
+    + Loads a fine-tuned model to infer dense 3D point clouds from RGB image pairs.
+    + Applies coordinate transformation and exports .ply files.
+    + Run with:
+    ```bash
+    python infer_dust3r.py
+    ```
+    
+### Visualize
 
 - `ply_visualize.py`
 
-    + Execute it to visualize PLY files in the test folder
-    + First go to the PLY folder with `cd PLY`, then you can run it using the command: `python3 ply_visualize.py test/{PLY_file}`
+    + Visualizes `.ply` files generated during inference using Open3D.
+    + Usage:
+    ```bash
+    cd PLY
+    python3 ply_visualize.py test/{PLY_file}
+    ```
