@@ -1,4 +1,4 @@
-# cv final project
+# CV Final Project
 
 ## Slides
 - [📊 Presentation Slides](https://3dreconstruction.my.canva.site/)
@@ -18,7 +18,16 @@ conda activate dust3r
 conda install pytorch torchvision pytorch-cuda=11.8 -c pytorch -c nvidia  # use the correct version of cuda for your system
 pip install -r requirements.txt
 ```
-## Pretrained Checkpoints
+## Usage Flow
+    1. Run training script
+    ```bash
+    bash train_dust3r.sh
+    ```
+    2. Run inference
+    ```bash
+    python infer_dust3r.py
+
+### Download Pretrained Checkpoints
 - Three DUSt3R pretrained models:
 | Modelname   | Training resolutions | Head | Encoder | Decoder |
 |-------------|----------------------|------|---------|---------|
@@ -31,13 +40,7 @@ To download a specific model, for example `DUSt3R_ViTLarge_BaseDecoder_512_dpt.p
 mkdir -p checkpoints/
 wget https://download.europe.naverlabs.com/ComputerVision/DUSt3R/DUSt3R_ViTLarge_BaseDecoder_224_linear.pth -P checkpoints/
 ```
-## Usage Flow
-    1. Run training script (`bash train_dust3r.sh`)
-    2. Run inference (`python infer_dust3r.py`)
-    3. Visualize output point clouds (`python ply_visualize.py`)
-
-## Key Modifications
-
+    ``
 ### Data preprocessing
 - `dust3r/datasets/sevenscenes.py`
     
@@ -68,7 +71,6 @@ wget https://download.europe.naverlabs.com/ComputerVision/DUSt3R/DUSt3R_ViTLarge
     ```
     
 ### Visualize
-
 - `ply_visualize.py`
 
     + Visualizes `.ply` files generated during inference using Open3D.
