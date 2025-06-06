@@ -30,6 +30,7 @@ pip install -r requirements.txt
 ## Implementation Details
 #### Download Pretrained Checkpoints
 - Three DUSt3R pretrained models:
+
 | Modelname   | Training resolutions | Head | Encoder | Decoder |
 |-------------|----------------------|------|---------|---------|
 | [`DUSt3R_ViTLarge_BaseDecoder_224_linear.pth`](https://download.europe.naverlabs.com/ComputerVision/DUSt3R/DUSt3R_ViTLarge_BaseDecoder_224_linear.pth) | 224x224 | Linear | ViT-L | ViT-B |
