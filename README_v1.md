@@ -27,6 +27,7 @@ pip install -r requirements.txt
     ```bash
     python infer_dust3r.py
 
+## Implementation Details
 ### Download Pretrained Checkpoints
 - Three DUSt3R pretrained models:
 | Modelname   | Training resolutions | Head | Encoder | Decoder |
@@ -41,7 +42,7 @@ mkdir -p checkpoints/
 wget https://download.europe.naverlabs.com/ComputerVision/DUSt3R/DUSt3R_ViTLarge_BaseDecoder_224_linear.pth -P checkpoints/
 ```
     ``
-### Data preprocessing
+### Data Preprocessing
 - `dust3r/datasets/sevenscenes.py`
     
     + Extracts image pairs, depth maps, and camera poses from the 7Scenes dataset.
