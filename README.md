@@ -64,7 +64,7 @@ python infer_dust3r.py \
 | redkitchen-seq-12| 0.118102  | 0.742114     |
 | redkitchen-seq-14| 0.137135  | 0.670429     |
 | stairs-seq-01    | 0.127639  | 0.808731     |
-| **average**      | **0.25**  | **0.62**      |
+| **AVERAGE**      | **0.25**  | **0.62**      |
 
 - Sparse seq:
 
