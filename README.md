@@ -66,7 +66,8 @@ python infer_dust3r.py \
 ----------------------------------------------------------------------------------------------------------
 
 ## Implementation Details
-- Three DUSt3R pretrained models:
+
+#### Three DUSt3R pretrained models:
 
 | Modelname   | Training resolutions | Head | Encoder | Decoder |
 |-------------|----------------------|------|---------|---------|
