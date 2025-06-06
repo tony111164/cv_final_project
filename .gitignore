@@ -134,5 +134,4 @@ dmypy.json
 # big files
 7SCENES/
 PLY/
-GT/
 checkpoints/

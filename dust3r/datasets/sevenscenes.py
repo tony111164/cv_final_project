@@ -78,19 +78,13 @@ class SevenScenes(BaseStereoViewDataset):
 
             # paths
             color_path = osp.join(self.ROOT, scene, self.split, f"{frame}.color.png") # e.g., "7SCENES/chess/train/seq-01/frame-000000.color.png"
-            depth_path = osp.join(self.ROOT, scene, self.split, f"{frame}.depth.png") # e.g., "7SCENES/chess/train/seq-01/frame-000000.depth.png"
+            # depth_path = osp.join(self.ROOT, scene, self.split, f"{frame}.depth.png") # e.g., "7SCENES/chess/train/seq-01/frame-000000.depth.png"
+            depth_path = osp.join(self.ROOT, scene, self.split, f"{frame}.depth.proj.png") # e.g., "7SCENES/chess/train/seq-01/frame-000000.depth.png"
             pose_path = osp.join(self.ROOT, scene, self.split, f"{frame}.pose.txt") # e.g., "7SCENES/chess/train/seq-01/frame-000000.pose.txt"
 
             # Load image and depth
             image = imread_cv2(color_path)
             depthmap = cv2.imread(depth_path, cv2.IMREAD_ANYDEPTH).astype(np.float32) / 1000.0
-            
-            # camera_pose = np.loadtxt(pose_path, dtype=np.float32)
-            
-            # if osp.exists(pose_path):
-            #     camera_pose = np.loadtxt(pose_path).astype(np.float32)
-            # else:
-            #     camera_pose = np.eye(4, dtype=np.float32)
             
             if self.split.lower() == 'train':
                 if osp.exists(pose_path):
@@ -102,8 +96,8 @@ class SevenScenes(BaseStereoViewDataset):
                 camera_pose = np.eye(4, dtype=np.float32)
             
             intrinsics = np.array([
-                [585, 0, 320],
-                [0, 585, 240],
+                [525, 0, 320],
+                [0, 525, 240],
                 [0, 0, 1]
             ], dtype=np.float32)
 

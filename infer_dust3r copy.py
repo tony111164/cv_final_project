@@ -14,7 +14,7 @@ def make_sparse_pairs(images, step):
 
 # === Parameters ===
 scenes_root = "7SCENES"
-output_dir = "PLY/seq"
+output_dir = "PLY/sparse-seq"
 model_ckpt = "checkpoints/dust3r_7scenes/train_3000/checkpoint-best.pth"
 
 # === Initialize model ===
@@ -25,8 +25,8 @@ model = AsymmetricCroCo3DStereo.from_pretrained(model_ckpt).to(device).eval()
 os.makedirs(output_dir, exist_ok=True)
 
 # Get each sequence directory (e.g., chess/test/seq-01)
-scene_dirs = sorted(glob(os.path.join(scenes_root, "*", "test", "seq-*")))
-# scene_dirs = sorted(glob(os.path.join(scenes_root, "*", "test", "sparse-seq-*")))
+# scene_dirs = sorted(glob(os.path.join(scenes_root, "*", "test", "seq-*")))
+scene_dirs = sorted(glob(os.path.join(scenes_root, "*", "test", "sparse-seq-*")))
 
 # === Process each sequence ===
 for seq_dir in tqdm(scene_dirs, desc="Processing Sequences"):
@@ -52,8 +52,8 @@ for seq_dir in tqdm(scene_dirs, desc="Processing Sequences"):
     # Load images
     images = load_images(color_paths, size=640)
     # Create image pairs every 'step' frames
-    pairs = make_sparse_pairs(images, step=20)
-    # pairs = make_sparse_pairs(images, step=1)
+    # pairs = make_sparse_pairs(images, step=20)
+    pairs = make_sparse_pairs(images, step=1)
 
     all_pts3d, all_rgb = [], []
 
